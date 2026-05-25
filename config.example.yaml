@@ -9,6 +9,8 @@ openai:
 deepseek:
   api_key: "sk-..."
   base_url: "https://api.deepseek.com"
+  # platform_token: "VGnJfZrt..."    # DeepSeek 控制台 session token（从浏览器 DevTools 获取）
+  # cookie: "smidV2=...; ..."        # 可选，配合 platform_token 使用
 
 zhipu:
   api_key: "xxx.yyy"
