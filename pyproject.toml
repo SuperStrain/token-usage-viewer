@@ -7,10 +7,12 @@ dependencies = [
     "textual>=0.50",
     "httpx[socks]",
     "pyyaml",
+    "PySide6>=6.7",
 ]
 
 [project.scripts]
 token-usage = "token_usage.__main__:main"
+token-usage-widget = "token_usage.gui.widget_app:main"
 
 [build-system]
 requires = ["hatchling"]
