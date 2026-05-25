@@ -50,7 +50,7 @@ class TokenUsageApp(App):
     async def on_mount(self) -> None:
         await self.action_refresh()
         if self.watch:
-            self._refresh_task = asyncio.create_task(self._auto_refresh())
+            self._refresh_task = asyncio.create_task(self._auto_refresh_loop())
 
     async def on_unmount(self) -> None:
         if self._refresh_task:
@@ -83,7 +83,7 @@ class TokenUsageApp(App):
         now = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S")
         self.query_one("#update-time", Static).update(f"  上次更新: {now}")
 
-    async def _auto_refresh(self) -> None:
+    async def _auto_refresh_loop(self) -> None:
         while True:
             await asyncio.sleep(self.interval)
             await self.action_refresh()
