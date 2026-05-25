@@ -23,7 +23,7 @@ class Dashboard(Grid):
         self._cards: dict[str, PlatformCard] = {}
 
     def compose(self) -> ComposeResult:
-        platforms = ["OpenCode Go", "OpenAI", "DeepSeek", "智谱 AI"]
+        platforms = ["OpenCode Go", "OpenAI", "DeepSeek", "ZhipuAI"]
         for name in platforms:
             card = PlatformCard(PlatformUsage(
                 platform=name,

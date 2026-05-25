@@ -15,7 +15,7 @@ class ZhipuAdapter(BaseAdapter):
         api_key = self.config.get("api_key")
         if not api_key:
             return PlatformUsage(
-                platform="智谱 AI",
+                platform="ZhipuAI",
                 status="unconfigured",
                 updated_at=datetime.now(tz=timezone.utc),
             )
@@ -32,7 +32,7 @@ class ZhipuAdapter(BaseAdapter):
                 return self._parse_quota(resp.json())
         except Exception as e:
             return PlatformUsage(
-                platform="智谱 AI",
+                platform="ZhipuAI",
                 status="error",
                 error_msg=str(e),
                 updated_at=datetime.now(tz=timezone.utc),
@@ -74,7 +74,7 @@ class ZhipuAdapter(BaseAdapter):
                 ))
 
         return PlatformUsage(
-            platform="智谱 AI",
+            platform="ZhipuAI",
             status="ok",
             quotas=quotas,
             extra={"level": level},

@@ -29,7 +29,7 @@ class TokenUsageApp(App):
         Binding("1", "focus_card(0)", "OpenCode"),
         Binding("2", "focus_card(1)", "OpenAI"),
         Binding("3", "focus_card(2)", "DeepSeek"),
-        Binding("4", "focus_card(3)", "智谱"),
+        Binding("4", "focus_card(3)", "ZhipuAI"),
     ]
 
     def __init__(self, watch: bool = False, interval: int = 300, **kwargs):
