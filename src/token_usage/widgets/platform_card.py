@@ -36,6 +36,14 @@ class PlatformCard(Vertical):
     PlatformCard > .card-extra {
         color: $text-muted;
     }
+    PlatformCard > .card-cost {
+        color: $warning;
+        margin-bottom: 1;
+    }
+    PlatformCard > .card-detail {
+        color: $text-muted;
+        padding-left: 2;
+    }
     """
 
     def __init__(self, usage: PlatformUsage, **kwargs):
@@ -58,16 +66,44 @@ class PlatformCard(Vertical):
         if self.usage.balance:
             yield Static(f"  余额: {self.usage.balance}", classes="card-balance")
 
+        if self.usage.extra:
+            if "monthly_cost" in self.usage.extra:
+                yield Static(
+                    f"  本月消费: {self.usage.extra['monthly_cost']}",
+                    classes="card-cost",
+                )
+            if "monthly_tokens" in self.usage.extra:
+                yield Static(
+                    f"  本月用量: {self.usage.extra['monthly_tokens']} tokens",
+                    classes="card-extra",
+                )
+            for model in self.usage.extra.get("models", []):
+                yield Static(
+                    f"    {model['name']}: {model['tokens']} ({model['requests']} req)",
+                    classes="card-detail",
+                )
+            if "available_tokens" in self.usage.extra:
+                yield Static(
+                    f"  可用: {self.usage.extra['available_tokens']} tokens",
+                    classes="card-extra",
+                )
+            if "plan" in self.usage.extra:
+                yield Static(
+                    f"  计划: {self.usage.extra['plan']}",
+                    classes="card-extra",
+                )
+            if "level" in self.usage.extra:
+                yield Static(
+                    f"  套餐: {self.usage.extra['level']}",
+                    classes="card-extra",
+                )
+
         for quota in self.usage.quotas:
             yield QuotaBar(
                 label=quota.label,
                 used_percent=quota.used_percent,
                 reset_at=quota.reset_at,
             )
-
-        if self.usage.extra:
-            extra_parts = [f"{k}: {v}" for k, v in self.usage.extra.items()]
-            yield Static("  " + " | ".join(extra_parts), classes="card-extra")
 
     def update(self, usage: PlatformUsage) -> None:
         self.usage = usage
