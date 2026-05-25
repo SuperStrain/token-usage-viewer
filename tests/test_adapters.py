@@ -71,11 +71,7 @@ def test_deepseek_parse_balance():
     result = adapter._parse_balance(data)
     assert result.status == "ok"
     assert result.balance == "¥79.76 CNY"
-    assert len(result.quotas) == 2
-    assert result.quotas[0].label == "赠送余额"
-    assert result.quotas[0].used == "¥10.00"
-    assert result.quotas[1].label == "充值余额"
-    assert result.quotas[1].used == "¥69.76"
+    assert len(result.quotas) == 0
 
 
 @pytest.mark.asyncio

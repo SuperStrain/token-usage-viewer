@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import httpx
 
 from token_usage.adapters.base import BaseAdapter
-from token_usage.models import PlatformUsage, QuotaWindow
+from token_usage.models import PlatformUsage
 
 
 class DeepSeekAdapter(BaseAdapter):
@@ -49,17 +49,11 @@ class DeepSeekAdapter(BaseAdapter):
         info = infos[0]
         currency = info.get("currency", "CNY")
         total = info.get("total_balance", "0")
-        granted = info.get("granted_balance", "0")
-        topped_up = info.get("topped_up_balance", "0")
         symbol = "¥" if currency == "CNY" else "$"
 
         return PlatformUsage(
             platform="DeepSeek",
             status="ok",
             balance=f"{symbol}{total} {currency}",
-            quotas=[
-                QuotaWindow(label="赠送余额", used_percent=0, used=f"{symbol}{granted}", reset_at=None),
-                QuotaWindow(label="充值余额", used_percent=0, used=f"{symbol}{topped_up}", reset_at=None),
-            ],
             updated_at=datetime.now(tz=timezone.utc),
         )
