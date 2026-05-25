@@ -1,7 +1,9 @@
 import os
 import tempfile
 import pytest
-from token_usage.config import load_config
+from pathlib import Path
+
+from token_usage.config import default_config_path, load_config
 
 
 def test_load_config_from_yaml():
@@ -53,6 +55,32 @@ deepseek:
     config = load_config(str(config_file))
     assert config["deepseek"]["api_key"] == "from_yaml"
     assert config["openai"]["access_token"] == "from_env"
+
+
+def test_load_config_uses_env_config_path(monkeypatch, tmp_path):
+    config_file = tmp_path / "custom.yaml"
+    config_file.write_text("refresh_interval: 42\n", encoding="utf-8")
+
+    monkeypatch.setenv("TOKEN_USAGE_CONFIG", str(config_file))
+
+    config = load_config()
+    assert config["refresh_interval"] == 42
+
+
+def test_default_config_path_uses_appdata_on_windows(monkeypatch):
+    monkeypatch.setattr("sys.platform", "win32")
+    monkeypatch.setenv("APPDATA", r"C:\Users\Tester\AppData\Roaming")
+
+    assert default_config_path() == (
+        Path(r"C:\Users\Tester\AppData\Roaming") / "token-usage" / "config.yaml"
+    )
+
+
+def test_default_config_path_uses_xdg_style_on_non_windows(monkeypatch):
+    monkeypatch.setattr("sys.platform", "linux")
+    monkeypatch.setenv("HOME", "/home/tester")
+
+    assert default_config_path() == Path("/home/tester/.config/token-usage/config.yaml")
 
 
 def test_load_config_partial_platforms():

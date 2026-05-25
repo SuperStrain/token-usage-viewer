@@ -12,9 +12,11 @@ A Textual TUI dashboard showing AI platform token usage across OpenCode, OpenAI,
 |---------|---------|
 | Run app | `uv run token-usage` |
 | Run app (direct) | `python -m token_usage` |
+| Run app on Windows fallback | `powershell -ExecutionPolicy Bypass -File .\run-windows.ps1` |
 | Run all tests | `uv run pytest` |
 | Run single test file | `uv run pytest tests/test_models.py` |
 | Build binary (Nuitka) | `uv run python -m nuitka --onefile --output-dir=dist --output-filename=token-usage src/token_usage/__main__.py` |
+| Build Windows binary (Nuitka) | `uv run python -m nuitka --onefile --output-dir=dist --output-filename=token-usage.exe src/token_usage/__main__.py` |
 
 ## Architecture
 ```
@@ -36,7 +38,9 @@ src/token_usage/
 ```
 
 ## Config
-- Default path: `~/.config/token-usage/config.yaml`
+- Default path on Windows: `%APPDATA%\token-usage\config.yaml`
+- Default path on Linux/macOS: `~/.config/token-usage/config.yaml`
+- Override config path with `--config <path>` or `TOKEN_USAGE_CONFIG`
 - Secrets can be injected via env vars (`TOKEN_USAGE_<PLATFORM>_<KEY>`)
 - `config.example.yaml` documents all keys
 

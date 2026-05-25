@@ -19,6 +19,9 @@ env/
 .coverage
 htmlcov/
 
+# Local config with secrets
+config.yaml
+
 # PyInstaller
 *.spec
 *.manifest

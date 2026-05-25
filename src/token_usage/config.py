@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 import yaml
 
-_DEFAULT_PATH = Path.home() / ".config" / "token-usage" / "config.yaml"
+_CONFIG_ENV_VAR = "TOKEN_USAGE_CONFIG"
 
 _ENV_MAP = {
     ("opencode", "workspace_id"): "TOKEN_USAGE_OPENCODE_WORKSPACE_ID",
@@ -19,11 +20,24 @@ _ENV_MAP = {
 }
 
 
-def load_config(path: str | None = None) -> dict:
-    config_path = Path(path) if path else _DEFAULT_PATH
+def default_config_path() -> Path:
+    if sys.platform.startswith("win"):
+        appdata = os.environ.get("APPDATA")
+        if appdata:
+            return Path(appdata) / "token-usage" / "config.yaml"
+        return Path.home() / "AppData" / "Roaming" / "token-usage" / "config.yaml"
+
+    home = os.environ.get("HOME")
+    if home:
+        return Path(home) / ".config" / "token-usage" / "config.yaml"
+    return Path.home() / ".config" / "token-usage" / "config.yaml"
+
+
+def load_config(path: str | os.PathLike[str] | None = None) -> dict:
+    config_path = Path(path or os.environ.get(_CONFIG_ENV_VAR) or default_config_path())
     config: dict = {}
     if config_path.exists():
-        with open(config_path) as f:
+        with open(config_path, encoding="utf-8") as f:
             data = yaml.safe_load(f)
             if isinstance(data, dict):
                 config = data

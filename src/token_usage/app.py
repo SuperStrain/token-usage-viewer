@@ -32,11 +32,17 @@ class TokenUsageApp(App):
         Binding("4", "focus_card(3)", "ZhipuAI"),
     ]
 
-    def __init__(self, watch: bool = False, interval: int = 300, **kwargs):
+    def __init__(
+        self,
+        watch: bool = False,
+        interval: int = 300,
+        config_path: str | None = None,
+        **kwargs,
+    ):
         super().__init__(**kwargs)
         self.watch = watch
         self.interval = interval
-        self.config = load_config()
+        self.config = load_config(config_path)
         self.adapters = create_adapters(self.config)
         self._refresh_task: asyncio.Task | None = None
 
