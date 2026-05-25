@@ -68,6 +68,17 @@ uv run token-usage --watch
 uv run token-usage --watch --interval 60
 ```
 
+### Windows 桌面小挂件
+
+```powershell
+uv run token-usage-widget
+uv run token-usage-widget --interval 60
+uv run token-usage-widget --config "$env:APPDATA\token-usage\config.yaml"
+uv run token-usage-widget --no-auto-refresh
+```
+
+小挂件是 Windows 原生窗口，支持拖动、手动刷新和自动刷新。
+
 Windows 推荐使用 Windows Terminal 或 PowerShell 7 运行，以获得更稳定的 UTF-8 中文显示和 TUI 渲染。
 
 如果当前 Windows 环境没有安装 `uv`，但使用的是本仓库附带的 Ubuntu `.venv` 依赖目录，可以用仓库内的启动脚本：
@@ -104,6 +115,12 @@ Windows:
 
 ```powershell
 uv run python -m nuitka --onefile --output-dir=dist --output-filename=token-usage.exe src/token_usage/__main__.py
+```
+
+Windows widget:
+
+```powershell
+uv run python -m nuitka --onefile --windows-console-mode=disable --output-dir=dist --output-filename=token-usage-widget.exe src/token_usage/gui/widget_app.py
 ```
 
 ## 技术栈

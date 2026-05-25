@@ -12,11 +12,13 @@ A Textual TUI dashboard showing AI platform token usage across OpenCode, OpenAI,
 |---------|---------|
 | Run app | `uv run token-usage` |
 | Run app (direct) | `python -m token_usage` |
+| Run Windows widget | `uv run token-usage-widget` |
 | Run app on Windows fallback | `powershell -ExecutionPolicy Bypass -File .\run-windows.ps1` |
 | Run all tests | `uv run pytest` |
 | Run single test file | `uv run pytest tests/test_models.py` |
 | Build binary (Nuitka) | `uv run python -m nuitka --onefile --output-dir=dist --output-filename=token-usage src/token_usage/__main__.py` |
 | Build Windows binary (Nuitka) | `uv run python -m nuitka --onefile --output-dir=dist --output-filename=token-usage.exe src/token_usage/__main__.py` |
+| Build Windows widget binary | `uv run python -m nuitka --onefile --windows-console-mode=disable --output-dir=dist --output-filename=token-usage-widget.exe src/token_usage/gui/widget_app.py` |
 
 ## Architecture
 ```
@@ -24,6 +26,7 @@ src/token_usage/
 ├── __main__.py    CLI entry (--watch, --interval)
 ├── app.py          Textual App, CSS, TUI compose + refresh logic
 ├── config.py       Loads config.yaml → env overrides
+├── gui/            Windows widget UI (PySide6)
 ├── models.py       PlatformUsage, QuotaWindow dataclasses
 ├── adapters/       One async adapter per platform (BaseAdapter pattern)
 │   ├── base.py
