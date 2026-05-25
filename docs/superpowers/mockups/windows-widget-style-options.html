@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Token Usage Windows Widget Mockups</title>
+<style>
+  :root { color-scheme: light; font-family: "Microsoft YaHei", "Segoe UI", sans-serif; }
+  body { margin: 0; min-height: 100vh; background: #f4f7ff; color: #243047; overflow-x: hidden; }
+  .page { max-width: 1180px; margin: 0 auto; padding: 34px 28px 44px; }
+  h1 { font-size: 30px; margin: 0 0 8px; letter-spacing: 0; }
+  .subtitle { margin: 0 0 26px; color: #667085; font-size: 15px; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: start; }
+  .option { background: white; border: 2px solid #d8e1ff; border-radius: 22px; padding: 18px; box-shadow: 0 16px 38px rgba(67, 92, 140, .16); }
+  .option h2 { font-size: 19px; margin: 14px 0 6px; }
+  .option p { margin: 0; color: #667085; line-height: 1.45; font-size: 14px; }
+  .widget { position: relative; height: 390px; border-radius: 28px; overflow: hidden; border: 3px solid rgba(255, 255, 255, .78); }
+  .titlebar { height: 38px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 13px; font-weight: 800; }
+  .dots { display: flex; gap: 6px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, .75); }
+  .metric { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 10px 14px; padding: 10px 12px; border-radius: 16px; font-weight: 800; }
+  .bar { height: 9px; border-radius: 999px; background: rgba(255, 255, 255, .75); overflow: hidden; margin-top: 6px; }
+  .fill { height: 100%; border-radius: 999px; }
+  .small { font-size: 12px; opacity: .76; font-weight: 700; }
+  .mascot { position: absolute; right: 14px; bottom: 12px; width: 76px; height: 76px; border-radius: 28px 28px 34px 34px; display: grid; place-items: center; font-size: 34px; box-shadow: 0 10px 22px rgba(0, 0, 0, .14); }
+  .a { background: linear-gradient(160deg, #fff9ca, #c7f6ff 60%, #ffd6e7); color: #334155; }
+  .a .titlebar { color: #36506d; }
+  .a .metric { background: rgba(255, 255, 255, .58); }
+  .a .fill { background: #ff8fb3; }
+  .a .mascot { background: #fff; }
+  .b { background: #23253a; color: #fff; }
+  .b .metric { background: #30334d; }
+  .b .fill { background: #7cf7c6; }
+  .b .mascot { background: #ffcf5a; }
+  .c { background: linear-gradient(160deg, #dff8ef, #fff2b8); color: #284038; border-radius: 36px; }
+  .c .metric { background: rgba(255, 255, 255, .62); }
+  .c .fill { background: #5bc99f; }
+  .c .mascot { background: #fff6d8; }
+  .platform { min-width: 86px; }
+  .pct { font-size: 20px; }
+  @media (max-width: 940px) { .grid { grid-template-columns: 1fr; } .widget { max-width: 360px; } }
+</style>
+</head>
+<body>
+  <main class="page">
+    <h1>Windows 桌面 token 小挂件：卡通风格方向</h1>
+    <p class="subtitle">先选视觉气质，再定技术实现。三个方案都保持“小、可爱、快速扫一眼”的桌面挂件定位。</p>
+    <section class="grid">
+      <article class="option">
+        <div class="widget a">
+          <div class="titlebar"><span>Token Buddy</span><div class="dots"><i class="dot"></i><i class="dot"></i></div></div>
+          <div class="metric"><div><div class="platform">OpenCode</div><div class="bar"><div class="fill" style="width:72%"></div></div></div><div class="pct">72%</div></div>
+          <div class="metric"><div><div class="platform">OpenAI</div><div class="bar"><div class="fill" style="width:38%"></div></div></div><div class="pct">38%</div></div>
+          <div class="metric"><div><div class="platform">DeepSeek</div><span class="small">余额 ¥79.76</span></div><div class="pct">OK</div></div>
+          <div class="metric"><div><div class="platform">ZhipuAI</div><div class="bar"><div class="fill" style="width:86%"></div></div></div><div class="pct">86%</div></div>
+          <div class="mascot">☁</div>
+        </div>
+        <h2>A. 糖果贴纸</h2>
+        <p>明亮、柔软、低压力。适合一直贴在桌面角落，提醒感比较温和。</p>
+      </article>
+      <article class="option">
+        <div class="widget b">
+          <div class="titlebar"><span>Token Arcade</span><div class="dots"><i class="dot"></i><i class="dot"></i></div></div>
+          <div class="metric"><div><div class="platform">OpenCode</div><div class="bar"><div class="fill" style="width:72%"></div></div></div><div class="pct">72</div></div>
+          <div class="metric"><div><div class="platform">OpenAI</div><div class="bar"><div class="fill" style="width:38%"></div></div></div><div class="pct">38</div></div>
+          <div class="metric"><div><div class="platform">DeepSeek</div><span class="small">¥79.76 CNY</span></div><div class="pct">$</div></div>
+          <div class="metric"><div><div class="platform">ZhipuAI</div><div class="bar"><div class="fill" style="width:86%"></div></div></div><div class="pct">86</div></div>
+          <div class="mascot">★</div>
+        </div>
+        <h2>B. 像素电玩</h2>
+        <p>更酷、更游戏化，高对比。适合喜欢状态面板有一点能量感的人。</p>
+      </article>
+      <article class="option">
+        <div class="widget c">
+          <div class="titlebar"><span>Token Garden</span><div class="dots"><i class="dot"></i><i class="dot"></i></div></div>
+          <div class="metric"><div><div class="platform">OpenCode</div><div class="bar"><div class="fill" style="width:72%"></div></div></div><div class="pct">72%</div></div>
+          <div class="metric"><div><div class="platform">OpenAI</div><div class="bar"><div class="fill" style="width:38%"></div></div></div><div class="pct">38%</div></div>
+          <div class="metric"><div><div class="platform">DeepSeek</div><span class="small">本月 188.9M</span></div><div class="pct">OK</div></div>
+          <div class="metric"><div><div class="platform">ZhipuAI</div><div class="bar"><div class="fill" style="width:86%"></div></div></div><div class="pct">86%</div></div>
+          <div class="mascot">✿</div>
+        </div>
+        <h2>C. 治愈便签</h2>
+        <p>像桌面便签，圆润但信息更清楚。适合常驻办公场景，不太打扰。</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
