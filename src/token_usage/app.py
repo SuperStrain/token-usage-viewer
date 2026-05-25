@@ -89,6 +89,6 @@ class TokenUsageApp(App):
             await self.action_refresh()
 
     def action_focus_card(self, index: int) -> None:
-        cards = list(self.query(Dashboard).query("PlatformCard"))
+        cards = list(self.query("PlatformCard"))
         if 0 <= index < len(cards):
             cards[index].focus()
