@@ -80,7 +80,7 @@ class TokenUsageApp(App):
         alert_bar = self.query_one(AlertBar)
         alert_bar.update_alerts(usages)
 
-        now = datetime.now(tz=timezone.utc).strftime("%H:%M:%S")
+        now = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S")
         self.query_one("#update-time", Static).update(f"  上次更新: {now}")
 
     async def _auto_refresh(self) -> None:

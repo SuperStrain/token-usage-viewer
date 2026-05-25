@@ -33,6 +33,9 @@ class PlatformCard(Vertical):
         color: $accent;
         margin-bottom: 1;
     }
+    PlatformCard > .card-extra {
+        color: $text-muted;
+    }
     """
 
     def __init__(self, usage: PlatformUsage, **kwargs):
@@ -64,7 +67,7 @@ class PlatformCard(Vertical):
 
         if self.usage.extra:
             extra_parts = [f"{k}: {v}" for k, v in self.usage.extra.items()]
-            yield Static(f"  {' | '.join(extra_parts)}", classes="card-title")
+            yield Static("  " + " | ".join(extra_parts), classes="card-extra")
 
     def update(self, usage: PlatformUsage) -> None:
         self.usage = usage

@@ -8,6 +8,23 @@ from textual.widgets import Static
 _MAX_BAR_WIDTH = 20
 
 
+def _to_local(dt: datetime) -> datetime:
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc).astimezone()
+    return dt.astimezone()
+
+
+def format_reset_time(dt: datetime) -> str:
+    local = _to_local(dt)
+    now = datetime.now(tz=local.tzinfo)
+    delta = local - now
+    if delta.total_seconds() > 86400 * 30:
+        return local.strftime("%m-%d %H:%M")
+    if delta.total_seconds() > 86400:
+        return local.strftime("%m-%d %H:%M")
+    return local.strftime("%H:%M")
+
+
 class QuotaBar(Static):
     def __init__(self, label: str, used_percent: float, reset_at: datetime | None = None, **kwargs):
         super().__init__(**kwargs)
@@ -30,22 +47,7 @@ class QuotaBar(Static):
         ]
 
         if self.reset_at:
-            delta = self.reset_at - datetime.now(tz=timezone.utc)
-            if delta.total_seconds() > 0:
-                reset_str = self._format_delta(delta)
-                parts.append(Text(f"  {reset_str}", style="dim"))
+            reset_str = format_reset_time(self.reset_at)
+            parts.append(Text(f"  重置于 {reset_str}", style="dim"))
 
         return Text.assemble(*parts)
-
-    @staticmethod
-    def _format_delta(delta) -> str:
-        total_sec = int(delta.total_seconds())
-        if total_sec < 3600:
-            return f"{total_sec // 60}m"
-        elif total_sec < 86400:
-            h, m = divmod(total_sec, 3600)
-            return f"{h}h{m // 60}m" if m % 60 else f"{h}h"
-        else:
-            d, rem = divmod(total_sec, 86400)
-            h = rem // 3600
-            return f"{d}d{h}h" if h else f"{d}d"
