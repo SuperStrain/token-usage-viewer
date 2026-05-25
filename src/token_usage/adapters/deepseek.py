@@ -162,6 +162,7 @@ class DeepSeekAdapter(BaseAdapter):
                 "monthly_cost": monthly_cost,
                 "monthly_tokens": self._format_tokens(monthly_token_usage),
                 "available_tokens": self._format_tokens(available),
+                "balance_raw": balance_val,
             },
             updated_at=now,
         )
