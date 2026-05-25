@@ -1,0 +1,47 @@
+# AGENTS.md — token-usage-viewer
+
+## Project
+A Textual TUI dashboard showing AI platform token usage across OpenCode, ChatGPT/OpenAI, DeepSeek, 智谱.
+
+## Prerequisites
+- Python ≥3.11, managed via `uv` (see `uv.lock`)
+- Run `uv sync` to install deps before working
+
+## Commands
+| Purpose | Command |
+|---------|---------|
+| Run app | `uv run token-usage` |
+| Run all tests | `uv run pytest` |
+| Run single test file | `uv run pytest tests/test_models.py` |
+| Build binary (Nuitka) | use Nuitka via `uv run` / `uv tool run` |
+| Build binary (PyInstaller) | `uv tool run pyinstaller token-usage.spec` |
+
+## Architecture
+```
+src/token_usage/
+├── __main__.py    CLI entry (--watch, --interval)
+├── app.py          Textual App, CSS, TUI compose + refresh logic
+├── config.py       Loads config.yaml → env overrides
+├── models.py       PlatformUsage, QuotaWindow dataclasses
+├── adapters/       One async adapter per platform (BaseAdapter pattern)
+│   ├── base.py
+│   ├── opencode.py
+│   ├── openai.py
+│   ├── deepseek.py
+│   └── zhipu.py
+└── widgets/
+    ├── dashboard.py
+    ├── platform_card.py
+    └── quota_bar.py
+```
+
+## Config
+- Default path: `~/.config/token-usage/config.yaml`
+- Secrets can be injected via env vars (`TOKEN_USAGE_<PLATFORM>_<KEY>`)
+- `config.example.yaml` documents all keys
+
+## Adapter rules
+- Each adapter inherits `BaseAdapter` and implements `async fetch_usage() → PlatformUsage`
+- Adapter receives only its platform's config dict (e.g. `{"api_key": "..."}`)
+- When required config keys are missing, return `PlatformUsage(status="unconfigured")`
+- Adapters registered in `adapters/__init__.py` `ADAPTERS` dict
