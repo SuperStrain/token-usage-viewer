@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from token_usage.adapters.opencode import OpenCodeAdapter
 from token_usage.adapters.openai import OpenAIAdapter
@@ -270,3 +272,51 @@ def test_deepseek_parse_usage_amount():
     assert result[1]["name"] == "v4-flash"
     assert result[1]["tokens"] == "3.5M"
     assert result[1]["requests"] == 85
+
+
+@pytest.mark.asyncio
+async def test_deepseek_fetch_with_platform_token(httpx_mock):
+    httpx_mock.add_response(
+        url="https://platform.deepseek.com/api/v0/users/get_user_summary",
+        json={
+            "code": 0,
+            "data": {
+                "biz_code": 0,
+                "biz_data": {
+                    "normal_wallets": [{"currency": "CNY", "balance": "50.00"}],
+                    "monthly_costs": [{"currency": "CNY", "amount": "10.50"}],
+                    "monthly_token_usage": "5000000",
+                    "total_available_token_estimation": "20000000",
+                },
+            },
+        },
+    )
+    httpx_mock.add_response(
+        url=re.compile(r"https://platform\.deepseek\.com/api/v0/usage/amount\?month=\d+&year=\d+"),
+        json={
+            "code": 0,
+            "data": {
+                "biz_data": {
+                    "total": [
+                        {
+                            "model": "deepseek-v4-pro",
+                            "usage": [
+                                {"type": "PROMPT_CACHE_HIT_TOKEN", "amount": "4000000"},
+                                {"type": "PROMPT_CACHE_MISS_TOKEN", "amount": "500000"},
+                                {"type": "RESPONSE_TOKEN", "amount": "500000"},
+                                {"type": "REQUEST", "amount": "100"},
+                            ],
+                        },
+                    ],
+                },
+            },
+        },
+    )
+    adapter = DeepSeekAdapter({"platform_token": "tok123"})
+    result = await adapter.fetch_usage()
+    assert result.status == "ok"
+    assert result.balance == "¥50.00 CNY"
+    assert result.extra["monthly_cost"] == "¥10.50 CNY"
+    assert result.extra["monthly_tokens"] == "5.0M"
+    assert len(result.extra["models"]) == 1
+    assert result.extra["models"][0]["name"] == "v4-pro"

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from datetime import datetime, timezone
 
 import httpx
@@ -10,6 +11,10 @@ from token_usage.models import PlatformUsage
 
 class DeepSeekAdapter(BaseAdapter):
     async def fetch_usage(self) -> PlatformUsage:
+        platform_token = self.config.get("platform_token")
+        if platform_token:
+            return await self._fetch_platform(platform_token)
+
         api_key = self.config.get("api_key")
         if not api_key:
             return PlatformUsage(
@@ -18,6 +23,67 @@ class DeepSeekAdapter(BaseAdapter):
                 updated_at=datetime.now(tz=timezone.utc),
             )
 
+        return await self._fetch_balance(api_key)
+
+    async def _fetch_platform(self, token: str) -> PlatformUsage:
+        base = "https://platform.deepseek.com"
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "x-app-version": "1.0.0",
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) token-usage-viewer/0.1",
+        }
+        cookie = self.config.get("cookie")
+        if cookie:
+            headers["Cookie"] = cookie
+
+        now = datetime.now(tz=timezone.utc)
+        month = now.month
+        year = now.year
+
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                summary_task = client.get(
+                    f"{base}/api/v0/users/get_user_summary",
+                    headers=headers,
+                )
+                amount_task = client.get(
+                    f"{base}/api/v0/usage/amount",
+                    params={"month": month, "year": year},
+                    headers=headers,
+                )
+                summary_resp, amount_resp = await asyncio.gather(
+                    summary_task, amount_task, return_exceptions=True,
+                )
+
+            if isinstance(summary_resp, Exception):
+                return await self._fallback_balance()
+
+            summary_resp.raise_for_status()
+            result = self._parse_platform_summary(summary_resp.json())
+
+            if not isinstance(amount_resp, Exception):
+                amount_resp.raise_for_status()
+                models = self._parse_usage_amount(amount_resp.json())
+                if models:
+                    result.extra["models"] = models
+
+            return result
+
+        except Exception:
+            return await self._fallback_balance()
+
+    async def _fallback_balance(self) -> PlatformUsage:
+        api_key = self.config.get("api_key")
+        if not api_key:
+            return PlatformUsage(
+                platform="DeepSeek",
+                status="error",
+                error_msg="Platform API failed, no api_key for fallback",
+                updated_at=datetime.now(tz=timezone.utc),
+            )
+        return await self._fetch_balance(api_key)
+
+    async def _fetch_balance(self, api_key: str) -> PlatformUsage:
         base_url = self.config.get("base_url", "https://api.deepseek.com")
         url = f"{base_url}/user/balance"
         try:
