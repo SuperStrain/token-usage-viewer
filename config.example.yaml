@@ -1,0 +1,17 @@
+opencode:
+  workspace_id: "wrk_xxx"
+  auth_cookie: "Fe26.2**..."
+
+openai:
+  access_token: "eyJ..."
+  account_id: "acct_xxx"
+
+deepseek:
+  api_key: "sk-..."
+  base_url: "https://api.deepseek.com"
+
+zhipu:
+  api_key: "xxx.yyy"
+  base_url: "https://open.bigmodel.cn"
+
+refresh_interval: 300
