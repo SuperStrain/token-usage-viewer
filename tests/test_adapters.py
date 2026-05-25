@@ -183,3 +183,90 @@ def test_openai_parse_with_weekly():
     assert result.quotas[0].label == "5小时限额"
     assert result.quotas[1].label == "每周限额"
     assert result.quotas[1].used_percent == 20.0
+
+
+def test_deepseek_parse_platform_summary():
+    adapter = DeepSeekAdapter({"api_key": "sk-test", "platform_token": "tok"})
+    data = {
+        "code": 0,
+        "data": {
+            "biz_code": 0,
+            "biz_data": {
+                "current_token": 10000000,
+                "monthly_usage": "188852655",
+                "normal_wallets": [
+                    {
+                        "currency": "CNY",
+                        "balance": "79.7625591200000000",
+                        "token_estimation": "26587519",
+                    }
+                ],
+                "bonus_wallets": [],
+                "total_available_token_estimation": "26587519",
+                "monthly_costs": [
+                    {
+                        "currency": "CNY",
+                        "amount": "36.2374408800000000",
+                    }
+                ],
+                "monthly_token_usage": "188852655",
+            },
+        },
+    }
+    result = adapter._parse_platform_summary(data)
+    assert result.status == "ok"
+    assert result.balance == "¥79.76 CNY"
+    assert result.extra["monthly_cost"] == "¥36.24 CNY"
+    assert result.extra["monthly_tokens"] == "188.9M"
+    assert result.extra["available_tokens"] == "26.6M"
+
+
+def test_deepseek_parse_usage_amount():
+    adapter = DeepSeekAdapter({"api_key": "sk-test", "platform_token": "tok"})
+    data = {
+        "code": 0,
+        "data": {
+            "biz_data": {
+                "total": [
+                    {
+                        "model": "deepseek-v4-pro",
+                        "usage": [
+                            {"type": "PROMPT_TOKEN", "amount": "0"},
+                            {"type": "PROMPT_CACHE_HIT_TOKEN", "amount": "176685824"},
+                            {"type": "PROMPT_CACHE_MISS_TOKEN", "amount": "6870490"},
+                            {"type": "RESPONSE_TOKEN", "amount": "1751641"},
+                            {"type": "REQUEST", "amount": "2483"},
+                        ],
+                    },
+                    {
+                        "model": "deepseek-v4-flash",
+                        "usage": [
+                            {"type": "PROMPT_TOKEN", "amount": "0"},
+                            {"type": "PROMPT_CACHE_HIT_TOKEN", "amount": "2936064"},
+                            {"type": "PROMPT_CACHE_MISS_TOKEN", "amount": "577014"},
+                            {"type": "RESPONSE_TOKEN", "amount": "31622"},
+                            {"type": "REQUEST", "amount": "85"},
+                        ],
+                    },
+                    {
+                        "model": "deepseek-chat & deepseek-reasoner",
+                        "usage": [
+                            {"type": "PROMPT_TOKEN", "amount": "0"},
+                            {"type": "PROMPT_CACHE_HIT_TOKEN", "amount": "0"},
+                            {"type": "PROMPT_CACHE_MISS_TOKEN", "amount": "0"},
+                            {"type": "RESPONSE_TOKEN", "amount": "0"},
+                            {"type": "REQUEST", "amount": "0"},
+                        ],
+                    },
+                ],
+            },
+        },
+    }
+    result = adapter._parse_usage_amount(data)
+    assert len(result) == 2
+    assert result[0]["name"] == "v4-pro"
+    assert result[0]["tokens"] == "185.3M"
+    assert result[0]["requests"] == 2483
+    assert result[1]["name"] == "v4-flash"
+    assert result[1]["tokens"] == "3.5M"
+    assert result[1]["requests"] == 85
