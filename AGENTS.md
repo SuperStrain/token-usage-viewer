@@ -1,7 +1,7 @@
 # AGENTS.md — token-usage-viewer
 
 ## Project
-A Textual TUI dashboard showing AI platform token usage across OpenCode, ChatGPT/OpenAI, DeepSeek, 智谱.
+A Textual TUI dashboard showing AI platform token usage across OpenCode, OpenAI, DeepSeek, ZhipuAI.
 
 ## Prerequisites
 - Python ≥3.11, managed via `uv` (see `uv.lock`)
@@ -11,10 +11,10 @@ A Textual TUI dashboard showing AI platform token usage across OpenCode, ChatGPT
 | Purpose | Command |
 |---------|---------|
 | Run app | `uv run token-usage` |
+| Run app (direct) | `python -m token_usage` |
 | Run all tests | `uv run pytest` |
 | Run single test file | `uv run pytest tests/test_models.py` |
-| Build binary (Nuitka) | use Nuitka via `uv run` / `uv tool run` |
-| Build binary (PyInstaller) | `uv tool run pyinstaller token-usage.spec` |
+| Build binary (Nuitka) | `uv run python -m nuitka --onefile --output-dir=dist --output-filename=token-usage src/token_usage/__main__.py` |
 
 ## Architecture
 ```

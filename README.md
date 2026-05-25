@@ -1,6 +1,6 @@
 # token-usage-viewer
 
-AI 平台 Token 用量 TUI 仪表盘，实时查看 OpenCode、ChatGPT、DeepSeek、智谱的配额使用情况。
+AI 平台 Token 用量 TUI 仪表盘，实时查看 OpenCode、OpenAI、DeepSeek、ZhipuAI 的配额使用情况。
 
 ## 安装
 
@@ -43,6 +43,8 @@ export TOKEN_USAGE_DEEPSEEK_API_KEY=sk-xxx
 ```bash
 # 单次查看
 uv run token-usage
+# 或直接运行
+python -m token_usage
 
 # 自动刷新模式（每 300 秒）
 uv run token-usage --watch
@@ -58,18 +60,14 @@ uv run token-usage --watch --interval 60
 | `r` | 手动刷新 |
 | `q` | 退出 |
 | `1` | 聚焦 OpenCode 卡片 |
-| `2` | 聚焦 ChatGPT 卡片 |
+| `2` | 聚焦 OpenAI 卡片 |
 | `3` | 聚焦 DeepSeek 卡片 |
-| `4` | 聚焦智谱卡片 |
+| `4` | 聚焦 ZhipuAI 卡片 |
 
 ## 构建二进制
 
 ```bash
-# PyInstaller
-uv tool run pyinstaller token-usage.spec
-
-# Nuitka
-uv run nuitka --standalone --onefile src/token_usage/__main__.py
+uv run python -m nuitka --onefile --output-dir=dist --output-filename=token-usage src/token_usage/__main__.py
 ```
 
 ## 技术栈
