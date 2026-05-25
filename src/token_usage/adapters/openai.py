@@ -13,7 +13,7 @@ class OpenAIAdapter(BaseAdapter):
         access_token = self.config.get("access_token")
         if not access_token:
             return PlatformUsage(
-                platform="ChatGPT Plus",
+                platform="OpenAI",
                 status="unconfigured",
                 updated_at=datetime.now(tz=timezone.utc),
             )
@@ -31,7 +31,7 @@ class OpenAIAdapter(BaseAdapter):
                 return self._parse_usage(resp.json())
         except Exception as e:
             return PlatformUsage(
-                platform="ChatGPT Plus",
+                platform="OpenAI",
                 status="error",
                 error_msg=str(e),
                 updated_at=datetime.now(tz=timezone.utc),
@@ -62,7 +62,7 @@ class OpenAIAdapter(BaseAdapter):
             ))
 
         return PlatformUsage(
-            platform="ChatGPT Plus",
+            platform="OpenAI",
             status="ok",
             quotas=quotas,
             extra={"plan": plan},
