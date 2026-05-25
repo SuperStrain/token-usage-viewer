@@ -13,15 +13,14 @@ class PlatformCard(Vertical):
     PlatformCard {
         border: round $primary;
         padding: 1 2;
-        margin: 1;
+        margin: 0 1;
         height: auto;
-        max-height: 12;
     }
     PlatformCard.error {
         border: round $error;
     }
     PlatformCard.unconfigured {
-        border: round $text-disabled;
+        border: round #5f5f5f;
     }
     PlatformCard > .card-title {
         text-style: bold;

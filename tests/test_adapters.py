@@ -8,9 +8,9 @@ from token_usage.adapters.zhipu import ZhipuAdapter
 def _make_opencode_html(rolling_pct, rolling_sec, weekly_pct, weekly_sec, monthly_pct, monthly_sec):
     return f"""
     <html><script>
-    rollingUsage:$R[0]=({{usagePercent:{rolling_pct},resetInSec:{rolling_sec}}});
-    weeklyUsage:$R[1]=({{usagePercent:{weekly_pct},resetInSec:{weekly_sec}}});
-    monthlyUsage:$R[2]=({{usagePercent:{monthly_pct},resetInSec:{monthly_sec}}});
+    rollingUsage:$R[30]={{status:"ok",resetInSec:{rolling_sec},usagePercent:{rolling_pct}}};
+    weeklyUsage:$R[31]={{status:"ok",resetInSec:{weekly_sec},usagePercent:{weekly_pct}}};
+    monthlyUsage:$R[32]={{status:"ok",resetInSec:{monthly_sec},usagePercent:{monthly_pct}}};
     </script></html>
     """
 

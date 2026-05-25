@@ -9,8 +9,9 @@ from token_usage.adapters.base import BaseAdapter
 from token_usage.models import PlatformUsage, QuotaWindow
 
 _PATTERN = re.compile(
-    r"(?:rolling|weekly|monthly)Usage:\$R\[\d+\]=\(\{usagePercent:(\d+),resetInSec:(\d+)\}\)"
+    r"(?:rolling|weekly|monthly)Usage:\$R\[\d+\]=\{[^}]*?usagePercent:(\d+)[^}]*\}"
 )
+_PATTERN_RESET = re.compile(r"resetInSec:(\d+)")
 
 
 class OpenCodeAdapter(BaseAdapter):
@@ -57,12 +58,20 @@ class OpenCodeAdapter(BaseAdapter):
 
         now = datetime.now(tz=timezone.utc)
         labels = ["滚动(5h)", "每周", "每月"]
+
+        all_blocks = re.findall(
+            r"(?:rolling|weekly|monthly)Usage:\$R\[\d+\]=\{([^}]+)\}", html
+        )
+
         quotas = []
-        for i, (pct_str, sec_str) in enumerate(matches[:3]):
+        for i in range(min(3, len(matches), len(all_blocks))):
+            pct = float(matches[i])
+            reset_match = _PATTERN_RESET.search(all_blocks[i])
+            reset_sec = int(reset_match.group(1)) if reset_match else 0
             quotas.append(QuotaWindow(
                 label=labels[i],
-                used_percent=float(pct_str),
-                reset_at=now + timedelta(seconds=int(sec_str)),
+                used_percent=pct,
+                reset_at=now + timedelta(seconds=reset_sec) if reset_sec else None,
             ))
 
         return PlatformUsage(
